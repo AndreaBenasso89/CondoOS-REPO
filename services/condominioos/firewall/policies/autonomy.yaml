@@ -1,0 +1,46 @@
+# Autonomy policy-as-code (docs/01 §4, docs/07 §5).
+# Maps (risk class) -> autonomy tier rules. Reviewed by the Risk & Compliance Board and
+# gated by QA regression tests before any change ships.
+
+thresholds:
+  revise_max_loops: 2
+  cooldown_between_reminders_days: 14
+  vendor_cost_human_threshold_eur: 800
+  large_financial_amount_eur: 2000
+
+# Per artifact-kind / risk-class rules.
+# auto_if: conditions that permit automatic execution (else fall to `else` tier).
+risk_classes:
+  legal_statement:
+    min_tier: A0                       # always human
+
+  collections_T1:
+    auto_if: { risk: low, confidence_gte: 0.90, reconciled: true }
+    else: A1
+  collections_T2:
+    min_tier: A1
+  collections_T3:
+    min_tier: A0
+
+  financial_post:
+    auto_if: { anomaly: false, confidence_gte: 0.85 }
+    else: A1
+
+  faq_grounded:
+    auto_if: { grounded: true, confidence_gte: 0.80 }
+    else: A1
+
+  convocation:
+    min_tier: A1                       # AoR approves; legal content validated first
+
+  vendor_dispatch:
+    auto_if: { compliant: true, under_cost_threshold: true, confidence_gte: 0.85 }
+    else: A1
+
+  emergency_safety:
+    min_tier: A0
+    notify: immediate
+
+  default:
+    auto_if: { risk: low, confidence_gte: 0.85 }
+    else: A1

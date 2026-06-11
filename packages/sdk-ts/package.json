@@ -1,0 +1,10 @@
+{
+  "name": "@condominioos/sdk-ts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TypeScript API client generated from the gateway OpenAPI (services/openapi/condominioos.yaml).",
+  "scripts": {
+    "generate": "openapi-typescript ../../services/openapi/condominioos.yaml -o src/schema.d.ts"
+  },
+  "main": "src/index.ts"
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://condominioos.eu/schemas/firewall.verdict.issued.v1.json",
+  "title": "firewall.verdict.issued",
+  "description": "Emitted whenever the Reputation Firewall issues a verdict over an outbound artifact.",
+  "type": "object",
+  "required": ["artifact_hash", "verdict", "layer_scores"],
+  "properties": {
+    "artifact_hash": { "type": "string" },
+    "verdict": { "enum": ["APPROVE", "REVISE", "HOLD", "BLOCK"] },
+    "autonomy_tier": { "enum": ["A0", "A1", "A2", "A3", null] },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "layer_scores": { "type": "object" }
+  },
+  "additionalProperties": false
+}

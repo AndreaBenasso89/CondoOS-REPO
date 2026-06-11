@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://condominioos.eu/schemas/envelope.json",
+  "title": "EventEnvelope",
+  "description": "Shared envelope wrapping every CondominioOS domain event (docs/14).",
+  "type": "object",
+  "required": ["event_id", "event_type", "version", "occurred_at", "tenant_id", "actor", "payload"],
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_type": { "type": "string", "pattern": "^[a-z]+\\.[a-z_]+\\.[a-z_]+$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "tenant_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": ["string", "null"], "format": "uuid" },
+    "causation_id": { "type": ["string", "null"], "format": "uuid" },
+    "actor": { "type": "string" },
+    "trace_id": { "type": ["string", "null"] },
+    "payload": { "type": "object" }
+  },
+  "additionalProperties": false
+}
