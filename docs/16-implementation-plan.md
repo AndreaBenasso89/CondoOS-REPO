@@ -10,9 +10,9 @@ How to go from this skeleton to a running, then production, system. Pairs with t
 ```
 condominioos/
 ├── apps/
-│   ├── resident-portal/        # Next.js — residents/owners
-│   ├── admin-portal/           # Next.js — AoR
-│   └── ops-console/            # Next.js — review queue, monitoring
+│   └── console/                # Next.js — unified app: resident + operator + admin
+│                               #   experiences with login, personas, and a shared sim layer
+│                               #   (role routes map to 3 deployments later)
 ├── services/
 │   ├── pyproject.toml          # single Python project (uv), packaged as condominioos.*
 │   └── condominioos/

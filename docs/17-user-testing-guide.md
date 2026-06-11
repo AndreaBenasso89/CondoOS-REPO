@@ -69,28 +69,31 @@ Then:
 
 ---
 
-## Path 3 — Clickable UI (the human-in-the-loop experience)
+## Path 3 — Clickable UI: the CondominioOS Console (recommended for demos)
 
-Two of the three portals are scaffolded to run. The **Ops Console review queue** is the most valuable
-to user-test because it *is* the human-in-the-loop control surface.
+`apps/console` is a single, polished Next.js app containing **all three experiences** (Resident,
+Operations, Admin) over a **shared simulation layer**. It needs no backend — it simulates the
+pipeline (intent routing → Reputation Firewall → send/hold/escalate) faithfully and persists to
+`localStorage`, so it's a true multi-profile test environment.
 
 ```bash
-# Terminal 1 — API
-cd services && make dev
-
-# Terminal 2 — UIs
 pnpm install
-pnpm --filter resident-portal dev   # http://localhost:3000  (ask a question)
-pnpm --filter ops-console dev       # http://localhost:3002/reviews  (approve held items)
+pnpm --filter console dev    # http://localhost:3000  → pick a persona to log in
 ```
 
-Flow to demo to a design partner:
-1. In the **resident portal** `/ask`, submit a question → it calls the gateway webhook.
-2. If the firewall holds it, open the **ops-console** `/reviews` → you see the draft, the recipient,
-   citations, the verdict, and the tripped layers → click **Approve**.
-3. Point out: *nothing reached the resident without a human seeing it.* That's the trust story.
+The flow that tells the whole story (use “Visualizza come” top-right to switch profiles):
+1. As **resident** *Marco Rossi*, ask *“non ricordo l'importo del mio saldo”* (or *“vorrei inviare
+   una diffida legale”*) → the Firewall **holds/escalates** it instead of auto-sending.
+2. Switch to **Operations** (Luca Ferrari) → the item is in the **review queue** with the draft,
+   recipient, verdict, tier, tripped layers, citations, and risk note → **Approve / Edit / Reject**.
+3. Switch back to the **resident** → the approved reply now appears in their chat thread.
+4. Switch to **Admin** (Avv. Sara Bianchi) → **Audit log** shows the whole hash-chained sequence.
 
-(The admin portal is a navigation skeleton; flesh it out once the journeys you care about are solid.)
+This is the strongest artifact to demo to a design partner: *nothing reaches a resident without the
+Firewall and (when needed) a human.* See `apps/console/README.md` for all personas and scenarios.
+
+> To exercise the **real backend** instead of the simulation, run `make dev` and repoint the
+> resident chat action (`lib/sim/store.tsx → ask`) at `POST /v1/webhooks/whatsapp`.
 
 ---
 

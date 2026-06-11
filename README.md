@@ -91,11 +91,14 @@ make migrate && make seed
 # 3. Start the API gateway and agent runtime
 make dev                  # http://localhost:8080/docs  (Swagger — drive any journey yourself)
 
-# 4. Open the portals
+# 4. Open the Console (all three experiences in one app)
 pnpm install
-pnpm --filter resident-portal dev   # http://localhost:3000/ask
-pnpm --filter ops-console dev        # http://localhost:3002/reviews
+pnpm --filter console dev            # http://localhost:3000  → pick a persona to log in
 ```
+
+The **Console** (`apps/console`) is a polished, self-contained test environment: log in as a
+resident, operator, or admin, switch profiles with "view as", and watch actions by one user become
+visible to the others (shared simulated backend). See [apps/console/README.md](apps/console/README.md).
 
 New here? Read [docs/17 — User-Testing Guide](docs/17-user-testing-guide.md) to navigate the
 end-to-end experience and decide where to focus, then [docs/16](docs/16-implementation-plan.md) for

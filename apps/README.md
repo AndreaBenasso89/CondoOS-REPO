@@ -1,16 +1,20 @@
 # Frontends
 
-Three Next.js 14 (App Router, TypeScript, Tailwind) applications sharing `@condominioos/ui` and the
-generated `@condominioos/sdk-ts` client (from the gateway OpenAPI).
+A single Next.js 14 app — **`console`** — delivers all three experiences (Resident, Operations,
+Admin) over a shared simulation layer, with login, seeded personas, and a “view as” profile switcher.
+This unified design is what makes **cross-visibility** work (an action by one profile is visible to
+the others) and lets you assess every interface in one test environment.
 
-| App | Audience | Purpose |
+| Experience | Audience | Purpose |
 |---|---|---|
-| `resident-portal` | Residents / owners | Ask questions, view documents, pay, open tickets, see assembly info. |
-| `admin-portal` | Amministratore (AoR) | Registry, accounting, assemblies, compliance, sign minutes. |
-| `ops-console` | AoR / Ops Specialist | **Human-in-the-loop:** review queue, approvals, monitoring, kill-switch. |
+| Resident (`/resident/*`) | Residents / owners | Ask questions, view documents, pay, open tickets, see assembly info. |
+| Operations (`/operator/*`) | Ops Specialist | **Human-in-the-loop:** review queue, all conversations, tickets, activity. |
+| Admin (`/admin/*`) | Amministratore (AoR) | Building/units, accounting, assemblies, compliance, audit log. |
 
-The **ops-console** is the most safety-critical UI: it renders firewall HOLD items with the draft,
-grounding/citations, recipient, and risk rationale, and offers one-click Approve / Edit / Reject
-(docs/07 §6).
+```bash
+pnpm install
+pnpm --filter console dev    # http://localhost:3000
+```
 
-Run a single app: `pnpm --filter resident-portal dev` (ports 3000/3001/3002).
+See [`console/README.md`](console/README.md) for personas and the cross-visibility walkthrough. The
+role-scoped routes map cleanly to three separate deployments later.
