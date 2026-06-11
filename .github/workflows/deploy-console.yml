@@ -1,0 +1,70 @@
+name: Deploy Console to GitHub Pages
+
+# Publishes apps/console as a static site so the three experiences can be navigated in a browser.
+# The Console is fully client-side (state in localStorage), so static hosting supports the whole
+# flow including cross-visibility within a browser.
+
+on:
+  push:
+    branches: ["claude/condominios-platform-design-r5a1x0"]
+    paths:
+      - "apps/console/**"
+      - ".github/workflows/deploy-console.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build static export
+        env:
+          STATIC_EXPORT: "true"
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: pnpm --filter console build
+
+      - name: Add .nojekyll (serve _next/ assets)
+        run: touch apps/console/out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/console/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
