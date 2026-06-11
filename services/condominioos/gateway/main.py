@@ -22,13 +22,31 @@ log = get_logger("gateway")
 _runtime = None
 
 
+# A fixed demo tenant so the resident portal works out of the box (matches apps/resident-portal/ask).
+DEMO_TENANT = uuid.UUID("00000000-0000-0000-0000-000000000001")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _runtime
     configure_telemetry("gateway")
     _runtime = build_runtime(offline=True)
+    _seed_demo_corpus(_runtime)
     log.info("gateway.started")
     yield
+
+
+def _seed_demo_corpus(runtime) -> None:
+    """Seed a small per-tenant knowledge base so the demo FAQ can be answered (offline)."""
+    knowledge = runtime.specialists["concierge"].knowledge
+    knowledge.seed(knowledge.collection_for(DEMO_TENANT), [
+        {"text": "Gli orari del portiere sono dalle 8 alle 12 dal lunedì al venerdì.",
+         "source": "doc:regolamento#art3", "doc_id": "regolamento"},
+        {"text": "Il portiere riceve al piano terra durante gli orari indicati.",
+         "source": "doc:regolamento#art4", "doc_id": "regolamento"},
+        {"text": "La raccolta differenziata va conferita negli appositi bidoni nel cortile interno.",
+         "source": "doc:regolamento#art9", "doc_id": "regolamento"},
+    ])
 
 
 app = FastAPI(title="CondominioOS API", version="0.1.0", lifespan=lifespan)

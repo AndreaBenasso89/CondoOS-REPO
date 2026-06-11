@@ -68,8 +68,18 @@ condominioos/
 | 14 | [Event Catalog](docs/14-event-catalog.md) | 6 |
 | 15 | [API Specifications](docs/15-api-specifications.md) | 5 |
 | 16 | [Implementation Plan](docs/16-implementation-plan.md) | I |
+| 17 | [User-Testing & "Where to Focus" Guide](docs/17-user-testing-guide.md) | — |
 
-## Quick start (local dev)
+## Quick start
+
+**Fastest way to see it work (no infra, no Node):**
+
+```bash
+cd services && pip install -e ".[dev]"
+make walkthrough          # guided end-to-end journeys + firewall probes + a "where to focus" report
+```
+
+**Full local dev:**
 
 ```bash
 # 1. Boot the local stack (Postgres, Redis, NATS, MinIO, Qdrant)
@@ -79,16 +89,17 @@ make up
 make migrate && make seed
 
 # 3. Start the API gateway and agent runtime
-make dev
+make dev                  # http://localhost:8080/docs  (Swagger — drive any journey yourself)
 
 # 4. Open the portals
-#    Resident portal   -> http://localhost:3000
-#    Admin portal      -> http://localhost:3001
-#    Ops console       -> http://localhost:3002
-#    API docs (OpenAPI)-> http://localhost:8080/docs
+pnpm install
+pnpm --filter resident-portal dev   # http://localhost:3000/ask
+pnpm --filter ops-console dev        # http://localhost:3002/reviews
 ```
 
-See [docs/16-implementation-plan.md](docs/16-implementation-plan.md) for the full developer guide.
+New here? Read [docs/17 — User-Testing Guide](docs/17-user-testing-guide.md) to navigate the
+end-to-end experience and decide where to focus, then [docs/16](docs/16-implementation-plan.md) for
+the full developer guide.
 
 ## Tech stack (summary)
 

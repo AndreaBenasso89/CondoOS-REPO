@@ -17,8 +17,13 @@ from condominioos.common.config import get_settings
 
 
 def canonical_json(payload: Any) -> str:
-    """Deterministic JSON for hashing/signing (sorted keys, no whitespace)."""
-    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    """Deterministic JSON for hashing/signing (sorted keys, no whitespace).
+
+    ``default=str`` makes audit/hashing tolerant of UUID, datetime, Decimal, etc. so a stray
+    non-JSON-native value in a payload can never crash the audit log or verdict signing.
+    """
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+                      default=str)
 
 
 def artifact_hash(payload: Any) -> str:

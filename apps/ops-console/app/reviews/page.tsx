@@ -1,8 +1,6 @@
 // Ops Console — Human Review Queue (the human-in-the-loop control surface, docs/07 §6).
 // Renders firewall HOLD items with the draft + grounding + recipient + risk, and 1-click actions.
 
-import { headers } from "next/headers";
-
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
 type LayerResult = { layer: string; passed: boolean; reasons?: string[] };
@@ -18,7 +16,7 @@ type ReviewItem = {
 };
 
 async function getReviews(): Promise<ReviewItem[]> {
-  const res = await fetch(`${API}/v1/reviews`, { cache: "no-store", headers: headers() });
+  const res = await fetch(`${API}/v1/reviews`, { cache: "no-store" });
   if (!res.ok) return [];
   const data = await res.json();
   return data.items ?? [];

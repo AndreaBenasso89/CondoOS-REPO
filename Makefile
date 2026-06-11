@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := help
 COMPOSE := docker compose -f infra/docker/docker-compose.yml
 
-.PHONY: help up down logs migrate seed dev test lint fmt typecheck eval
+.PHONY: help up down logs migrate seed dev test lint fmt typecheck eval walkthrough
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -40,3 +40,6 @@ typecheck: ## Static typecheck (mypy)
 
 eval: ## Run the agent evaluation suite
 	cd services && uv run python -m condominioos.evals.run_suite
+
+walkthrough: ## Guided end-to-end user-test walkthrough + maturity/gap report (offline, no infra)
+	cd services && uv run python -m condominioos.scripts.walkthrough
